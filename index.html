@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Title</title>
+  <style>
+    *{
+      padding: 0;
+      margin: 0;
+    }
+    .select-box{
+      border: 1px dotted #000;
+      position: absolute;
+      top: 0;
+      left: 0;
+      z-index: 99;
+    }
+    #wrapper{
+      width: 200px;
+      height: 150px;
+    }
+    input{
+      margin: 5px;
+    }
+  </style>
+</head>
+<body>
+  <div class="select-box"></div>
+  <div id="wrapper"></div>
+<script>
+  let startX = 0
+  let startY = 0
+  const selectWrapper = document.getElementById('wrapper')
+  const oSelectBox = document.querySelector('.select-box')
+  //创建选择框
+
+  for (let i = 0; i < 24; i++) {
+    const oInput = document.createElement('input')
+    oInput.type = "checkbox"
+    selectWrapper.appendChild(oInput)
+  }
+  const oCheckBox = Array.from(document.querySelectorAll('input'))
+      .map(it=>({
+        top: it.offsetTop,
+        left: it.offsetLeft,
+        right: it.offsetLeft + it.clientWidth,
+        bottom: it.offsetTop + it.clientHeight,
+        dom:it}))
+
+  function bindEvent(){
+    function moveEvent(e){
+      // 设置上下左右选框
+      let left = startX,
+          top = startY,
+          width,
+          height
+      if(e.clientX - startX > 0 && e.clientY - startY > 0 ){
+        width = (e.clientX - startX) + 'px'
+        height = (e.clientY - startY) + 'px'
+      }else if(e.clientX - startX < 0  && e.clientY - startY < 0 ){
+        left = e.clientX + 'px'
+        top = e.clientY + 'px'
+        width = ( startX - e.clientX) + 'px'
+        height = (startY - e.clientY) + 'px'
+      }else if(e.clientX - startX > 0 && e.clientY - startY < 0){
+        top = e.clientY + 'px'
+        width = ( e.clientX - startX) + 'px'
+        height = (startY  - e.clientY) + 'px'
+      }else{
+        left = e.clientX + 'px'
+        width = (startX - e.clientX) + 'px'
+        height = (e.clientY - startY) + 'px'
+      }
+      oSelectBox.style.left = left
+      oSelectBox.style.top = top
+      oSelectBox.style.width = width
+      oSelectBox.style.height = height
+      const right = parseInt(left) + parseInt(width)
+      const bottom = parseInt(top) + parseInt(width)
+      left = parseInt(left)
+      top = parseInt(top)
+      oCheckBox.forEach(it=>{
+        if( left < it.right
+            && right > it.left
+            &&  top < it.bottom
+            &&  bottom > it.top){
+          it.dom.checked = true
+        }else {
+          it.dom.checked = false
+        }
+      })
+    }
+
+    document.addEventListener('mousedown', function (e){
+      document.addEventListener('mousemove', moveEvent)
+      oSelectBox.style.display = 'block'
+      startX = e.clientX
+      startY = e.clientY
+      oSelectBox.style.left =startX + 'px'
+      oSelectBox.style.top =startY + 'px'
+    })
+
+    document.addEventListener('mouseup', function (e){
+      document.removeEventListener('mousemove', moveEvent)
+      oSelectBox.style.width = '0px'
+      oSelectBox.style.height = '0px'
+      oSelectBox.style.display = 'none'
+      oCheckBox.forEach(it=>{
+        it.dom.checked = false
+      })
+
+      })
+  }
+  bindEvent()
+</script>
+</body>
+</html>
