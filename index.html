@@ -107,6 +107,7 @@
       let nowTime = new Date().getTime()
       if(nowTime - lastTime > wait){
         fn.apply(this,arguments)
+        lastTime = nowTime
       }
     }
   }
