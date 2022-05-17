@@ -13,7 +13,8 @@
       position: absolute;
       top: 0;
       left: 0;
-      z-index: 99;
+      z-index: -1;
+      cursor: default;
     }
     #wrapper{
       width: 200px;
@@ -21,6 +22,11 @@
     }
     input{
       margin: 5px;
+    }
+    .test{
+      background-color: #2c3e50;
+      width: 100px;
+      height: 100px;
     }
   </style>
 </head>
@@ -49,7 +55,7 @@
 
   function bindEvent(){
     function moveEvent(e){
-
+      e.preventDefault()
       let left = e.clientX > startX ? startX : e.clientX
       let top = e.clientY > startY ? startY : e.clientY
       let width = Math.abs(e.clientX - startX)
@@ -74,18 +80,9 @@
         }
       })
     }
-
-    document.addEventListener('mousedown', function (e){
-      document.addEventListener('mousemove', moveEvent)
-      oSelectBox.style.display = 'block'
-      startX = e.clientX
-      startY = e.clientY
-      oSelectBox.style.left =startX + 'px'
-      oSelectBox.style.top =startY + 'px'
-    })
-
-    document.addEventListener('mouseup', function (e){
+    function upEvent(e){
       document.removeEventListener('mousemove', moveEvent)
+      document.removeEventListener('mouseup', upEvent)
       oSelectBox.style.width = '0px'
       oSelectBox.style.height = '0px'
       oSelectBox.style.display = 'none'
@@ -93,8 +90,19 @@
         it.dom.checked = false
       })
 
-      })
+    }
+    document.addEventListener('mousedown', function (e){
+      document.addEventListener('mousemove', moveEvent)
+      document.addEventListener('mouseup', upEvent)
+      oSelectBox.style.display = 'block'
+      startX = e.clientX
+      startY = e.clientY
+      oSelectBox.style.left =startX + 'px'
+      oSelectBox.style.top =startY + 'px'
+    })
+
   }
+
   bindEvent()
 </script>
 </body>
