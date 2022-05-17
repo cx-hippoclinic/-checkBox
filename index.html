@@ -32,8 +32,8 @@
   let startY = 0
   const selectWrapper = document.getElementById('wrapper')
   const oSelectBox = document.querySelector('.select-box')
-  //创建选择框
 
+  //创建选择框
   for (let i = 0; i < 24; i++) {
     const oInput = document.createElement('input')
     oInput.type = "checkbox"
@@ -49,7 +49,7 @@
 
   function bindEvent(){
     function moveEvent(e){
-      // 设置上下左右选框
+
       let left = startX,
           top = startY,
           width,
@@ -71,6 +71,7 @@
         width = (startX - e.clientX) + 'px'
         height = (e.clientY - startY) + 'px'
       }
+      // 设置上下左右选框
       oSelectBox.style.left = left
       oSelectBox.style.top = top
       oSelectBox.style.width = width
@@ -79,6 +80,7 @@
       const bottom = parseInt(top) + parseInt(width)
       left = parseInt(left)
       top = parseInt(top)
+      // 设置是否选中
       oCheckBox.forEach(it=>{
         if( left < it.right
             && right > it.left
