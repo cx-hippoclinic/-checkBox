@@ -54,6 +54,7 @@
         dom:it}))
 
   function bindEvent(){
+    //鼠标移动事件函数
     function moveEvent(e){
       e.preventDefault()
       let left = e.clientX > startX ? startX : e.clientX
@@ -80,17 +81,17 @@
         }
       })
     }
+    const throttleMove = throttle(moveEvent, 16)
+    //鼠标抬起事件函数
     function upEvent(e){
-      document.removeEventListener('mousemove', moveEvent)
+      document.removeEventListener('mousemove', throttleMove)
       document.removeEventListener('mouseup', upEvent)
       oSelectBox.style.width = '0px'
       oSelectBox.style.height = '0px'
       oSelectBox.style.display = 'none'
-
-
     }
     document.addEventListener('mousedown', function (e){
-      document.addEventListener('mousemove', moveEvent)
+      document.addEventListener('mousemove', throttleMove)
       document.addEventListener('mouseup', upEvent)
       oSelectBox.style.display = 'block'
       startX = e.clientX
@@ -98,7 +99,16 @@
       oSelectBox.style.left =startX + 'px'
       oSelectBox.style.top =startY + 'px'
     })
-
+  }
+  // 节流函数
+  function throttle(fn, wait){
+    let lastTime = 0;
+    return  function (){
+      let nowTime = new Date().getTime()
+      if(nowTime - lastTime > wait){
+        fn.apply(this,arguments)
+      }
+    }
   }
 
   bindEvent()
