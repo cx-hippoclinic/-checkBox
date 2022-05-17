@@ -50,36 +50,18 @@
   function bindEvent(){
     function moveEvent(e){
 
-      let left = startX,
-          top = startY,
-          width,
-          height
-      if(e.clientX - startX > 0 && e.clientY - startY > 0 ){
-        width = (e.clientX - startX) + 'px'
-        height = (e.clientY - startY) + 'px'
-      }else if(e.clientX - startX < 0  && e.clientY - startY < 0 ){
-        left = e.clientX + 'px'
-        top = e.clientY + 'px'
-        width = ( startX - e.clientX) + 'px'
-        height = (startY - e.clientY) + 'px'
-      }else if(e.clientX - startX > 0 && e.clientY - startY < 0){
-        top = e.clientY + 'px'
-        width = ( e.clientX - startX) + 'px'
-        height = (startY  - e.clientY) + 'px'
-      }else{
-        left = e.clientX + 'px'
-        width = (startX - e.clientX) + 'px'
-        height = (e.clientY - startY) + 'px'
-      }
+      let left = e.clientX > startX ? startX : e.clientX
+      let top = e.clientY > startY ? startY : e.clientY
+      let width = Math.abs(e.clientX - startX)
+      let height = Math.abs(e.clientY - startY)
+
       // 设置上下左右选框
-      oSelectBox.style.left = left
-      oSelectBox.style.top = top
-      oSelectBox.style.width = width
-      oSelectBox.style.height = height
-      const right = parseInt(left) + parseInt(width)
-      const bottom = parseInt(top) + parseInt(width)
-      left = parseInt(left)
-      top = parseInt(top)
+      oSelectBox.style.left = left + 'px'
+      oSelectBox.style.top = top + 'px'
+      oSelectBox.style.width = width + 'px'
+      oSelectBox.style.height = height + 'px'
+      const right = left + width
+      const bottom = top + height
       // 设置是否选中
       oCheckBox.forEach(it=>{
         if( left < it.right
